@@ -13,12 +13,17 @@ function serve() {
 	let server;
 
 	function toExit() {
-		if (server) server.kill(0);
+		if (server) {
+			server.kill(0);
+		};
 	}
 
 	return {
 		writeBundle() {
-			if (server) return;
+			if (server) {
+				return;
+			};
+
 			server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
 				stdio: ['ignore', 'inherit', 'inherit'],
 				shell: true
@@ -43,7 +48,7 @@ export default {
 			preprocess: sveltePreprocess({ sourceMap: !production }),
 			compilerOptions: {
 				// enable run-time checks when not in production
-				dev: !production,
+				dev: !production
 			}
 		}),
 		// we'll extract any component CSS out into

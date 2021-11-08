@@ -3,9 +3,10 @@
   export let handleSubmit;
 </script>
 
-<div class="search">
-  <form class="search-form" on:submit|preventDefault={handleSubmit}>
-    <input bind:value={query} class="text-widget textline-field has-value" type="search"
-    placeholder="Search Unsplash's library of over 1 million photos" />
-  </form>
-</div>
+<form on:submit|preventDefault={handleSubmit}>
+  <div class="widg_searchbar-bar__search">
+    <div class="widg_searchbar-bar__close" data-searchbar="close"></div>
+    <label for="search" class="visuallyhidden">Search: </label>
+    <input bind:value={query} type="text" name="searchbar_search" data-searchbar="input"/>
+  </div>
+</form>

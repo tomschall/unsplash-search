@@ -91,27 +91,11 @@
         }
       });
   }
+  console.log('svelte app is running');
+  
 </script>
 
-<style>
-  .widg_search_svelte {
-    width: 100%;
-    max-width: 1500px;
-    padding: 20px;
-    margin: 0 auto 50px;
-    text-align: center;
-  }
-
-  h1 {
-    font-size: 50px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-  }
-</style>
-
-<div class="widg_search_svelte" data-init="edu_events" data-sidebar="object">
-  <h1>Search App</h1>
-
+<div class="widg_search_svelte">
   <Search bind:query={searchQuery} handleSubmit={handleSubmit} />
 
   <SearchResults results={searchResults} />
