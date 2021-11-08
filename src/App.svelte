@@ -94,7 +94,7 @@
 </script>
 
 <style>
-  .App {
+  .widg_search_svelte {
     width: 100%;
     max-width: 1500px;
     padding: 20px;
@@ -109,8 +109,8 @@
   }
 </style>
 
-<main class="App">
-  <h1>Unsplash Search App</h1>
+<div class="widg_search_svelte" data-init="edu_events" data-sidebar="object">
+  <h1>Search App</h1>
 
   <Search bind:query={searchQuery} handleSubmit={handleSubmit} />
 
@@ -121,4 +121,4 @@
       <LoadingIndicator />
     {/if}
   </div>
-</main>
+</div>
