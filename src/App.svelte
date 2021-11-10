@@ -60,7 +60,9 @@
     isLoading = true;
 
     const endpoint =
-      `https://api.unsplash.com/search/photos?query=${searchTerm}&page=${nextPage}&per_page=28&client_id=${UNSPLASH_ACCESS_KEY}`;
+      // `http://localhost:5000/searchbar.json`;
+      `https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=all`
+      // `https://api.unsplash.com/search/photos?query=${searchTerm}&page=${nextPage}&per_page=28&client_id=${UNSPLASH_ACCESS_KEY}`;
 
     fetch(endpoint)
       .then(response => {
@@ -70,36 +72,38 @@
         return response.json();
       })
       .then(data => {
+        
         if (data.total === 0) {
-          alert("No photos were found for your search query.")
+          console.log("No photos were found for your search query.")
           return;
         }
+        
+        searchResults = [...searchResults, ...data.items];
+        // console.log('1 item', data.items[0].Description);
+        // console.log('items', data.items);
+        // console.log('total items', data.items_total);
+        console.log('SEARCH RESULTS', searchResults);
 
-        searchResults = [...searchResults, ...data.results];
-        totalPages = data.total_pages;
+        // totalPages = data.total_pages;
 
-        if (nextPage < totalPages) {
-          nextPage += 1;
-        }
+        // if (nextPage < totalPages) {
+        //   nextPage += 1;
+        // }
       })
-      .catch(() => alert("An error occured!"))
+      .catch(() => console.log("An error occured!"))
       .finally(() => {
         isLoading = false;
 
-        if (nextPage >= Number(totalPages)) {
-          observer.unobserve(target);
-        }
+        // if (nextPage >= Number(totalPages)) {
+        //   observer.unobserve(target);
+        // }
       });
-  }
-  console.log('svelte app is running');
-  
+  }  
 </script>
 
 <div class="widg_search_svelte">
   <Search bind:query={searchQuery} handleSubmit={handleSubmit} />
-
   <SearchResults results={searchResults} />
-
   <div class="loading-indicator">
     {#if isLoading}
       <LoadingIndicator />
