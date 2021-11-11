@@ -3,6 +3,22 @@
   import Search from './Search.svelte';
   import SearchResults from './SearchResults.svelte';
   import LoadingIndicator from './LoadingIndicator.svelte';
+  import { register, init, getLocaleFromNavigator, addMessages, locale } from 'svelte-i18n';
+  import en from './lang/en.json';
+  import de from './lang/de.json';
+
+  addMessages('en', en);
+  addMessages('de', de);
+
+  init({
+    fallbackLocale: 'de',
+    initialLocale: getLocaleFromNavigator()
+  });
+
+  const handleLocaleChange = e => {
+    e.preventDefault();
+    locale.set(e.target.value);
+  };
 
   const UNSPLASH_ACCESS_KEY: string =
     'lrb6doO5sPdVClLRce7mMMa9De5AT6ho4owTkvBQ14I';
