@@ -5,25 +5,23 @@
   import SearchResults from './SearchResults.svelte';
   import SearchCategories from './SearchCategories.svelte';
   import LoadingIndicator from './LoadingIndicator.svelte';
-  import { register, init, getLocaleFromNavigator, addMessages, locale } from 'svelte-i18n';
+  import { init, getLocaleFromNavigator, addMessages } from 'svelte-i18n';
   import en from './lang/en.json';
-  import de from './lang/de.json';  
+  import de from './lang/de.json';
 
-  
   addMessages('en', en);
   addMessages('de', de);
-  
+
   init({
     fallbackLocale: 'de',
-    initialLocale: getLocaleFromNavigator()
+    initialLocale: getLocaleFromNavigator(),
   });
-  
+
   let searchQuery: string = '';
   let searchTerm: string = null;
   let searchResults: string[] = [];
   let isLoading: boolean = false;
-  let prop;
-
+  let prop: string = '';
   let observer: any;
   let target: any;
 
@@ -45,13 +43,9 @@
     });
   };
 
-  console.log('value', prop);
-  
-
   onMount(() => {
     observer = new IntersectionObserver(loadMoreResults, options);
     target = document.querySelector('.loading-indicator');
-    console.log('value', prop);  
   });
 
   const handleSubmit = () => {
@@ -63,52 +57,55 @@
 
     observer.observe(target);
     triggerSearch();
-  }
+  };
 
   const triggerSearch = () => {
     isLoading = true;
 
-    const endpoint = 
-      `https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=${prop || 'all'}`
+    // if (!searchTerm) {
+    //   console.log('trigger click', searchTerm, typeof searchTerm);
+    //   searchResults = [];
+    // }
 
-      console.log(`https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=${prop || 'all'}`);
-      
+    const endpoint = `https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=${
+      prop || 'all'
+    }`;
 
     fetch(endpoint)
-      .then(response => {
+      .then((response) => {
         if (!response.ok) {
           throw Error(response.statusText);
         }
         return response.json();
       })
-      .then(data => {        
-        if (data.total === 0) {
-          console.log("No photos were found for your search query.")
-          return;
-        }
-        
+      .then((data) => {
         searchResults = [...searchResults, ...data.items];
       })
-      .catch(() => console.log("An error occured!"))
+      .catch(() => console.log('An error occured!'))
       .finally(() => {
         isLoading = false;
       });
-  }  
+  };
 </script>
 
 <div class="widg_search_svelte">
-  <Search bind:query={searchQuery} handleSubmit={handleSubmit} />
-  <h3>prop: {prop}</h3>
+  <Search bind:query={searchQuery} {handleSubmit} />
   <div class="search__results">
-  <div class="widg_searchbar-bar__title">{$_('searchresult_title')}</div>
-    <div class="widg_searchbar-bar__content custom-scrollbar" data-searchbar="content">
+    <div class="widg_searchbar-bar__title">{$_('searchresult_title')}</div>
+    <div
+      class="widg_searchbar-bar__content custom-scrollbar"
+      data-searchbar="content"
+    >
       <div class="search__cat">
-        <SearchCategories bind:prop />
+        <SearchCategories
+          bind:prop
+          triggerCategorySearch={() => triggerSearch()}
+        />
         <SearchResults results={searchResults} />
         <div class="loading-indicator">
-        {#if isLoading}
-          <LoadingIndicator />
-        {/if}
+          {#if isLoading}
+            <LoadingIndicator />
+          {/if}
         </div>
       </div>
     </div>
