@@ -1,34 +1,28 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import { onMount } from 'svelte';
   import Search from './Search.svelte';
   import SearchResults from './SearchResults.svelte';
+  import SearchCategories from './SearchCategories.svelte';
   import LoadingIndicator from './LoadingIndicator.svelte';
   import { register, init, getLocaleFromNavigator, addMessages, locale } from 'svelte-i18n';
   import en from './lang/en.json';
-  import de from './lang/de.json';
+  import de from './lang/de.json';  
 
+  
   addMessages('en', en);
   addMessages('de', de);
-
+  
   init({
     fallbackLocale: 'de',
     initialLocale: getLocaleFromNavigator()
   });
-
-  const handleLocaleChange = e => {
-    e.preventDefault();
-    locale.set(e.target.value);
-  };
-
-  const UNSPLASH_ACCESS_KEY: string =
-    'lrb6doO5sPdVClLRce7mMMa9De5AT6ho4owTkvBQ14I';
-
+  
   let searchQuery: string = '';
   let searchTerm: string = null;
-  let totalPages: number = null;
   let searchResults: string[] = [];
-  let nextPage: number = 1;
   let isLoading: boolean = false;
+  let prop;
 
   let observer: any;
   let target: any;
@@ -45,40 +39,40 @@
 
   const loadMoreResults = (entries: any) => {
     entries.forEach((entry: any) => {
-      // If new search or if ongoing search
-      if (nextPage === 1 || isLoading) return;
-
       if (entry.isIntersecting) {
-        searchUnsplash();
+        triggerSearch();
       }
     });
   };
 
+  console.log('value', prop);
+  
+
   onMount(() => {
     observer = new IntersectionObserver(loadMoreResults, options);
     target = document.querySelector('.loading-indicator');
+    console.log('value', prop);  
   });
 
-  function handleSubmit() {
+  const handleSubmit = () => {
     searchTerm = searchQuery.trim();
     console.log('searchTerm', searchTerm);
     searchResults = [];
-    totalPages = null;
-    nextPage = 1;
 
     if (!searchTerm) return;
 
     observer.observe(target);
-    searchUnsplash();
+    triggerSearch();
   }
 
-  function searchUnsplash() {
+  const triggerSearch = () => {
     isLoading = true;
 
-    const endpoint =
-      // `http://localhost:5000/searchbar.json`;
-      `https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=all`
-      // `https://api.unsplash.com/search/photos?query=${searchTerm}&page=${nextPage}&per_page=28&client_id=${UNSPLASH_ACCESS_KEY}`;
+    const endpoint = 
+      `https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=${prop || 'all'}`
+
+      console.log(`https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=${prop || 'all'}`);
+      
 
     fetch(endpoint)
       .then(response => {
@@ -87,42 +81,36 @@
         }
         return response.json();
       })
-      .then(data => {
-        
+      .then(data => {        
         if (data.total === 0) {
           console.log("No photos were found for your search query.")
           return;
         }
         
         searchResults = [...searchResults, ...data.items];
-        // console.log('1 item', data.items[0].Description);
-        // console.log('items', data.items);
-        // console.log('total items', data.items_total);
-        console.log('SEARCH RESULTS', searchResults);
-
-        // totalPages = data.total_pages;
-
-        // if (nextPage < totalPages) {
-        //   nextPage += 1;
-        // }
       })
       .catch(() => console.log("An error occured!"))
       .finally(() => {
         isLoading = false;
-
-        // if (nextPage >= Number(totalPages)) {
-        //   observer.unobserve(target);
-        // }
       });
   }  
 </script>
 
 <div class="widg_search_svelte">
   <Search bind:query={searchQuery} handleSubmit={handleSubmit} />
-  <SearchResults results={searchResults} />
-  <div class="loading-indicator">
-    {#if isLoading}
-      <LoadingIndicator />
-    {/if}
+  <h3>prop: {prop}</h3>
+  <div class="search__results">
+  <div class="widg_searchbar-bar__title">{$_('searchresult_title')}</div>
+    <div class="widg_searchbar-bar__content custom-scrollbar" data-searchbar="content">
+      <div class="search__cat">
+        <SearchCategories bind:prop />
+        <SearchResults results={searchResults} />
+        <div class="loading-indicator">
+        {#if isLoading}
+          <LoadingIndicator />
+        {/if}
+        </div>
+      </div>
+    </div>
   </div>
 </div>

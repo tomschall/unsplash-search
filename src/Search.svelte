@@ -8,7 +8,7 @@
 <div class="widg_searchbar-bar__search">
   <form on:submit|preventDefault={handleSubmit}>
     <div class="widg_searchbar-bar__close" data-searchbar="close"></div>
-    <label for="search" class="visuallyhidden">Search: </label>
+    <label for="search" class="visuallyhidden">{$_('search_label')}</label>
     <input bind:value={query} type="text" name="searchbar_search" placeholder={$_('search_placeholder')} data-searchbar="input" />
   </form>
 </div>
