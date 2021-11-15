@@ -2,7 +2,7 @@
   import { _ } from 'svelte-i18n';
 
   export let triggerCategorySearch = () => {};
-  export let prop;
+  export let selectedCategory;
 </script>
 
 <div
@@ -13,7 +13,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'all';
+      selectedCategory = 'all';
       triggerCategorySearch();
     }}
   >
@@ -22,7 +22,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'studiengänge';
+      selectedCategory = 'studiengänge';
       triggerCategorySearch();
     }}
   >
@@ -31,7 +31,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'weiterbildungsangebot';
+      selectedCategory = 'weiterbildungsangebot';
       triggerCategorySearch();
     }}
   >
@@ -40,7 +40,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'events';
+      selectedCategory = 'events';
       triggerCategorySearch();
     }}
   >
@@ -49,7 +49,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'news';
+      selectedCategory = 'news';
       triggerCategorySearch();
     }}
   >
@@ -58,7 +58,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'dokumente';
+      selectedCategory = 'dokumente';
       triggerCategorySearch();
     }}
   >
@@ -67,7 +67,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'personen';
+      selectedCategory = 'personen';
       triggerCategorySearch();
     }}
   >
@@ -76,7 +76,7 @@
   <button
     class="button button__cat"
     on:click={() => {
-      prop = 'allgemein';
+      selectedCategory = 'allgemein';
       triggerCategorySearch();
     }}
   >

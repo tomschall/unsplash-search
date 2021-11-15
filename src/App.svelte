@@ -21,7 +21,7 @@
   let searchTerm: string = null;
   let searchResults: string[] = [];
   let isLoading: boolean = false;
-  let prop: string = '';
+  let selectedCategory: string = '';
   let observer: any;
   let target: any;
 
@@ -68,7 +68,7 @@
     // }
 
     const endpoint = `https://www.fhnw.ch/de/searchbar.json?q=${searchTerm}&category=${
-      prop || 'all'
+      selectedCategory || 'all'
     }`;
 
     fetch(endpoint)
@@ -98,7 +98,7 @@
     >
       <div class="search__cat">
         <SearchCategories
-          bind:prop
+          bind:selectedCategory
           triggerCategorySearch={() => triggerSearch()}
         />
         <SearchResults results={searchResults} />
